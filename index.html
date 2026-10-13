@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f1115">
+<title>Набор массы — Павло</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💪</text></svg>">
+<style>
+:root{
+  --bg:#0f1115; --bg2:#161a21; --card:#1b2029; --line:#262d38;
+  --tx:#e8ecf2; --mut:#8e9aab; --acc:#4ade80; --acc2:#60a5fa;
+  --warn:#fbbf24; --bad:#f87171; --rad:16px;
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--tx);
+  font:16px/1.6 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;
+  padding-bottom:calc(76px + var(--safe-b));
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--acc2);text-decoration:none}
+a:hover{text-decoration:underline}
+h1,h2,h3,h4{line-height:1.25;margin:0 0 .5em}
+h1{font-size:26px;letter-spacing:-.4px}
+h2{font-size:21px;letter-spacing:-.3px;margin-top:1.6em}
+h3{font-size:17px;color:var(--acc);margin-top:1.4em}
+h4{font-size:15px;color:var(--mut);text-transform:uppercase;letter-spacing:.6px;margin-top:1.2em}
+p{margin:0 0 .9em}
+small{color:var(--mut)}
+
+/* layout */
+.wrap{max-width:900px;margin:0 auto;padding:0 16px}
+header.top{
+  position:sticky;top:0;z-index:40;background:rgba(15,17,21,.86);
+  backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line);
+}
+.topin{max-width:900px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:12px}
+.topin .t{font-weight:650;font-size:16px;letter-spacing:-.2px}
+.topin .s{color:var(--mut);font-size:13px;margin-left:auto;text-align:right}
+
+/* goal bar */
+.goal{margin:14px 0 4px;background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:14px 16px}
+.goal .row{display:flex;justify-content:space-between;font-size:13px;color:var(--mut);margin-bottom:8px}
+.bar{height:10px;background:#0b0d11;border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc2),var(--acc));border-radius:99px}
+
+/* tabs */
+nav.tabs{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;
+  background:rgba(22,26,33,.94);backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);padding-bottom:var(--safe-b);
+}
+nav.tabs .in{display:flex;max-width:900px;margin:0 auto;overflow-x:auto;scrollbar-width:none}
+nav.tabs .in::-webkit-scrollbar{display:none}
+nav.tabs button{
+  flex:1 0 auto;min-width:72px;background:none;border:0;color:var(--mut);
+  font:inherit;font-size:11px;padding:9px 6px 8px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+}
+nav.tabs button .ic{font-size:19px;line-height:1}
+nav.tabs button[aria-selected="true"]{color:var(--acc)}
+section.tab{display:none;animation:fade .18s ease}
+section.tab.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* cards */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:16px;margin:12px 0}
+.card.flat{background:var(--bg2)}
+.card h3:first-child,.card h2:first-child,.card h4:first-child{margin-top:0}
+.grid{display:grid;gap:12px}
+@media(min-width:640px){.grid.c2{grid-template-columns:1fr 1fr}.grid.c3{grid-template-columns:repeat(3,1fr)}}
+
+.note{border-left:3px solid var(--acc2);background:rgba(96,165,250,.07);padding:12px 14px;border-radius:0 12px 12px 0;margin:12px 0}
+.warn{border-left:3px solid var(--warn);background:rgba(251,191,36,.08);padding:12px 14px;border-radius:0 12px 12px 0;margin:12px 0}
+.stop{border-left:3px solid var(--bad);background:rgba(248,113,113,.09);padding:12px 14px;border-radius:0 12px 12px 0;margin:12px 0}
+.ok{border-left:3px solid var(--acc);background:rgba(74,222,128,.07);padding:12px 14px;border-radius:0 12px 12px 0;margin:12px 0}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:14.5px;margin:10px 0}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mut);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+td.r{color:var(--mut)}
+tr:last-child td{border-bottom:0}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* checklist */
+.chk{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.chk:last-child{border-bottom:0}
+.chk input{appearance:none;flex:0 0 24px;width:24px;height:24px;margin:1px 0 0;border:2px solid #39434f;border-radius:8px;background:#0b0d11;cursor:pointer;position:relative;transition:.12s}
+.chk input:checked{background:var(--acc);border-color:var(--acc)}
+.chk input:checked::after{content:"";position:absolute;left:7px;top:3px;width:5px;height:10px;border:solid #06240f;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+.chk span{flex:1}
+.chk input:checked + span{color:var(--mut);text-decoration:line-through}
+.chk b{display:block;font-weight:600}
+.chk em{font-style:normal;color:var(--mut);font-size:13.5px}
+
+/* pills / buttons */
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.btn{display:inline-flex;align-items:center;gap:7px;background:var(--bg2);border:1px solid var(--line);
+  color:var(--tx);padding:11px 15px;border-radius:12px;font-size:14.5px;font-weight:550;cursor:pointer;text-decoration:none}
+.btn:hover{border-color:#3a4553;text-decoration:none}
+.btn.p{background:var(--acc);color:#06240f;border-color:var(--acc)}
+.tag{display:inline-block;font-size:11px;font-weight:650;letter-spacing:.4px;text-transform:uppercase;
+  padding:3px 8px;border-radius:7px;background:#242b36;color:var(--mut);margin-left:6px;vertical-align:middle}
+.tag.g{background:rgba(74,222,128,.15);color:var(--acc)}
+.tag.y{background:rgba(251,191,36,.15);color:var(--warn)}
+.tag.r{background:rgba(248,113,113,.15);color:var(--bad)}
+.tag.b{background:rgba(96,165,250,.15);color:var(--acc2)}
+
+/* accordion */
+details{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);margin:10px 0;overflow:hidden}
+details[open]{border-color:#333d4b}
+summary{padding:15px 16px;cursor:pointer;font-weight:600;list-style:none;display:flex;align-items:center;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"▾";margin-left:auto;color:var(--mut);transition:.2s}
+details[open] summary::after{transform:rotate(180deg)}
+details .body{padding:0 16px 16px;border-top:1px solid var(--line);padding-top:14px}
+summary .k{font-size:12px;color:var(--mut);font-weight:500}
+
+/* numbers */
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:10px;margin:12px 0}
+.kpi div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+.kpi b{display:block;font-size:22px;letter-spacing:-.5px}
+.kpi small{font-size:11.5px;display:block;margin-top:2px}
+
+.when{display:inline-block;min-width:58px;font-variant-numeric:tabular-nums;color:var(--acc2);font-weight:650}
+hr{border:0;border-top:1px solid var(--line);margin:22px 0}
+code{background:#0b0d11;padding:2px 6px;border-radius:6px;font-size:13px;color:var(--acc)}
+ul,ol{margin:0 0 .9em;padding-left:22px}
+li{margin:.3em 0}
+.foot{color:var(--mut);font-size:13px;text-align:center;padding:26px 16px 10px}
+
+@media print{
+  nav.tabs,.btns,header.top{display:none}
+  body{background:#fff;color:#000;padding:0}
+  section.tab{display:block!important}
+  .card,details{background:#fff;border:1px solid #ccc;break-inside:avoid}
+  a{color:#000}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="topin">
+    <div class="t">Набор массы</div>
+    <div class="s" id="today"></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ================= СЕГОДНЯ ================= -->
+<section class="tab on" id="t-today">
+  <div class="goal">
+    <div class="row"><span>63,5 кг — старт</span><span>Цель 69,5 кг</span></div>
+    <div class="bar"><i style="width:8%"></i></div>
+    <div class="row" style="margin:8px 0 0"><span>Темп, который нам нужен: <b style="color:var(--tx)">+0,2–0,3 кг в неделю</b></span><span>~6 мес</span></div>
+  </div>
+
+  <h1>Сегодня</h1>
+  <p>Это единственный экран, который тебе нужен в обычный день. Остальные вкладки — справочник, туда заходишь, когда нужно.</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">День, по порядку</h3>
+    <label class="chk"><input type="checkbox" data-k="d1"><span><b><span class="when">Подъём</span> Шейк №1 — в течение часа</b><em>870 ккал, 62 г белка. Это самый важный пункт дня: если его пропустить, 2800 ккал уже не собрать. Рецепт — во вкладке «Рецепты».</em></span></label>
+    <label class="chk"><input type="checkbox" data-k="d2"><span><b><span class="when">Утро</span> Таблетки — кучка №1</b><em>Омега-3 + витамин C. С едой, не натощак.</em></span></label>
+    <label class="chk"><input type="checkbox" data-k="d3"><span><b><span class="when">+3 ч</span> Контейнер №1</b><em>Любое из шести блюд. ~850 ккал, 55 г белка.</em></span></label>
+    <label class="chk"><input type="checkbox" data-k="d4"><span><b><span class="when">+3 ч</span> Контейнер №2</b><em>Да, два контейнера на смену, а не один. Один — это и есть та самая пропущенная еда.</em></span></label>
+    <label class="chk"><input type="checkbox" data-k="d5"><span><b><span class="when">Днём</span> Перекус</b><em>Орехи, банан с пастой, йогурт — что под рукой. Список во вкладке «Рецепты».</em></span></label>
+    <label class="chk"><input type="checkbox" data-k="d6"><span><b><span class="when">Зал</span> Тренировка по очереди A → B → C → D</b><em>4 раза в неделю, не привязано к дням. Какая следующая — смотри во вкладке «Зал».</em></span></label>
+    <label class="chk"><input type="checkbox" data-k="d7"><span><b><span class="when">После</span> Креатин 5 г</b><em>В любое время суток, главное — каждый день, включая дни без зала.</em></span></label>
+    <label class="chk"><input type="checkbox" data-k="d8"><span><b><span class="when">Ужин</span> Контейнер №3 или нормальная еда дома</b></span></label>
+    <label class="chk"><input type="checkbox" data-k="d9"><span><b><span class="when">Вечер</span> Таблетки — кучка №2</b><em>Магний глицинат. Он же помогает заснуть.</em></span></label>
+    <label class="chk"><input type="checkbox" data-k="d10"><span><b><span class="when">Вечер</span> Шейк №2 — только если не добрал 400–500 ккал</b><em>Не обязательный. Это догоняющий шейк, а не ежедневный.</em></span></label>
+    <label class="chk"><input type="checkbox" data-k="d11"><span><b><span class="when">Утром</span> Взвешивание натощак</b><em>До еды, после туалета, в одних трусах. Весы сами отправят в Apple Health.</em></span></label>
+  </div>
+
+  <div class="btns">
+    <a class="btn p" href="shortcuts://run-shortcut?name=Вес">Записать вес</a>
+    <a class="btn" href="shortcuts://run-shortcut?name=Фитнес%20заметка">Дописать в заметку</a>
+    <a class="btn" href="mobilenotes://">Открыть Заметки</a>
+    <a class="btn" href="#" data-go="setup">Как это настроить</a>
+  </div>
+  <p><small>Кнопки заработают после того, как создашь шорткаты с этими именами — инструкция во вкладке «Настройка». До этого они просто ничего не сделают.</small></p>
+
+  <div class="note">
+    <b>Если день пошёл не так.</b> Пропустил еду — не пытайся «догнать» всё разом вечером, станет плохо и ты пропустишь завтрашний день тоже. Просто добавь шейк №2 и иди спать. Один провальный день из семи не ломает ничего; мы смотрим на среднее за неделю.
+  </div>
+
+  <h2>В воскресенье ты не делаешь ничего</h2>
+  <div class="card">
+    <p>Каждое воскресенье вечером я сам открываю твою заметку «Фитнес — неделя N», считаю галочки и средний вес, смотрю папку с выгрузками из Здоровья, принимаю <b>одно</b> решение и завожу заметку на следующую неделю. Ты мне ничего не отправляешь.</p>
+    <div class="scroll"><table>
+      <tr><th>Цифра</th><th>Откуда я её беру</th></tr>
+      <tr><td>Средний вес за неделю</td><td class="r">Apple Health → выгрузка в папку «Данные»</td></tr>
+      <tr><td>Тренировок из 4</td><td class="r">Галочки в заметке</td></tr>
+      <tr><td>Шейк, креатин, таблетки</td><td class="r">Галочки в заметке</td></tr>
+      <tr><td>Сон</td><td class="r">Oura → Apple Health → та же выгрузка</td></tr>
+      <tr><td>Калории и белок</td><td class="r">Скриншот из приложения еды в ту же папку — единственное, что руками</td></tr>
+      <tr><td>Что было тяжело</td><td class="r">Две строки в конце заметки, если есть что сказать</td></tr>
+    </table></div>
+    <p style="margin-bottom:0"><small>Если данных нет — я не выдумываю. Напишу двумя строками, чего не хватило и как это починить одним движением.</small></p>
+  </div>
+</section>
+
+<!-- ================= РЕЦЕПТЫ ================= -->
+<section class="tab" id="t-food">
+  <h1>Рецепты</h1>
+  <p>Шесть блюд, каждое ≈850 ккал и 55–60 г белка на порцию. Готовишь два-три из них в воскресенье, раскладываешь по контейнерам — хватает на неделю–полторы. Все количества даны <b>на 10 порций</b>, чтобы не считать.</p>
+
+  <div class="kpi">
+    <div><b>6</b><small>блюд</small></div>
+    <div><b>~850</b><small>ккал порция</small></div>
+    <div><b>55–60</b><small>г белка</small></div>
+    <div><b>~295 $</b><small>на месяц</small></div>
+  </div>
+
+  <div class="note">Это не «диета». Это обычная еда, которую ты и так ешь, просто посчитанная и приготовленная заранее, чтобы в смену не стоять перед выбором «съесть что-то или нет».</div>
+
+  <h2>Основные блюда</h2>
+
+  <details>
+    <summary>Блюдо 1 · Гречка с курицей в сливочно-грибном соусе <span class="k">795 ккал · 55 г</span></summary>
+    <div class="body">
+      <div class="scroll"><table>
+        <tr><th>Продукт</th><th>На 10 порций</th></tr>
+        <tr><td>Куриное бедро без кости</td><td class="r">1200 г</td></tr>
+        <tr><td>Куриная грудка</td><td class="r">900 г</td></tr>
+        <tr><td>Гречка (сухая)</td><td class="r">800 г</td></tr>
+        <tr><td>Шампиньоны</td><td class="r">800 г</td></tr>
+        <tr><td>Лук</td><td class="r">400 г</td></tr>
+        <tr><td>Сметана</td><td class="r">400 г</td></tr>
+        <tr><td>Куриный бульон</td><td class="r">800 мл</td></tr>
+        <tr><td>Мука</td><td class="r">60 г</td></tr>
+        <tr><td>Масло, соль, перец, чеснок</td><td class="r">по вкусу</td></tr>
+      </table></div>
+      <h4>Как готовить</h4>
+      <p>Гречку отвари отдельно. Мясо нарежь кусками и обжарь до корочки, убери. В той же сковороде — лук, потом грибы, пока не уйдёт вода. Всыпь муку, размешай, влей бульон, дай загустеть. Верни мясо, туши 15 минут, в конце сметана — и сразу снимай с огня, иначе свернётся.</p>
+      <p style="margin-bottom:0"><small>Гречку ищи не в Sam's Club, а в русском или европейском магазине — там она втрое дешевле.</small></p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Блюдо 2 · Тефтели в томатной подливе <span class="k">850 ккал · 55 г</span></summary>
+    <div class="body">
+      <div class="scroll"><table>
+        <tr><th>Продукт</th><th>На 10 порций</th></tr>
+        <tr><td>Фарш говяжий 90/10</td><td class="r">2000 г</td></tr>
+        <tr><td>Белый хлеб + молоко</td><td class="r">150 г + 200 мл</td></tr>
+        <tr><td>Яйца</td><td class="r">2 шт</td></tr>
+        <tr><td>Лук (на тёрке)</td><td class="r">300 г</td></tr>
+        <tr><td>Пассата / томатное пюре</td><td class="r">800 г</td></tr>
+        <tr><td>Сметана</td><td class="r">300 г</td></tr>
+        <tr><td>Морковь</td><td class="r">300 г</td></tr>
+        <tr><td>Гарнир: рис или картофель</td><td class="r">500 г сухого риса</td></tr>
+      </table></div>
+      <h4>Как готовить</h4>
+      <p>Хлеб замочи в молоке. Смешай с фаршем, яйцами и луком — лук именно на тёрке, тогда тефтели сочные. Кати шарики по <b>50 г</b>. <b>Не обжаривай</b> — выложи на противень и запекай при 220 °C 18–20 минут. Пока пекутся, потуши морковь с пассатой, добавь сметану, залей тефтели и дай постоять 10 минут.</p>
+      <p style="margin-bottom:0"><small>Запекание вместо обжарки экономит тебе полчаса и кучу масла, а на вкус разницы нет.</small></p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Блюдо 3 · Чили кон карне с рисом <span class="k">850 ккал · 57 г · меньше всего жира</span></summary>
+    <div class="body">
+      <div class="scroll"><table>
+        <tr><th>Продукт</th><th>На 10 порций</th></tr>
+        <tr><td>Фарш говяжий 90/10</td><td class="r">1800 г</td></tr>
+        <tr><td>Фасоль (консервы, слить)</td><td class="r">1500 г</td></tr>
+        <tr><td>Crushed tomatoes</td><td class="r">1600 г</td></tr>
+        <tr><td>Рис (сухой)</td><td class="r">500 г</td></tr>
+        <tr><td>Лук, перец, кукуруза</td><td class="r">400 / 400 / 400 г</td></tr>
+        <tr><td>Чили, зира, паприка, чеснок</td><td class="r">по вкусу</td></tr>
+      </table></div>
+      <h4>Как готовить</h4>
+      <p>Обжарь фарш, добавь лук и перец, потом специи — специи в горячее масло, а не в томат, иначе не раскроются. Влей томаты, положи фасоль и кукурузу, туши 40 минут на слабом огне. Рис отдельно.</p>
+      <div class="ok" style="margin-bottom:0">Самое лёгкое блюдо из шести. <b>Его и ешь за 2 часа до зала</b> — не будет тяжести.</div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Блюдо 4 · Курица тикка-масала с рисом <span class="k">835 ккал · 55 г</span></summary>
+    <div class="body">
+      <div class="scroll"><table>
+        <tr><th>Продукт</th><th>На 10 порций</th></tr>
+        <tr><td>Куриное бедро</td><td class="r">1600 г</td></tr>
+        <tr><td>Куриная грудка</td><td class="r">700 г</td></tr>
+        <tr><td>Греческий йогурт (маринад)</td><td class="r">500 г</td></tr>
+        <tr><td>Пассата</td><td class="r">1000 г</td></tr>
+        <tr><td>Сливки</td><td class="r">300 мл</td></tr>
+        <tr><td>Рис (сухой)</td><td class="r">600 г</td></tr>
+        <tr><td>Garam masala, имбирь, чеснок</td><td class="r">25 г + по вкусу</td></tr>
+      </table></div>
+      <h4>Как готовить</h4>
+      <p>Мясо в йогурте со специями — минимум 2 часа, лучше с вечера. Запекай при <b>230 °C 18 минут</b>, чтобы схватилась корочка. Отдельно потуши пассату со специями, влей сливки, положи мясо. Рис отдельно.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Блюдо 5 · Свиной гуляш <span class="k">845 ккал · 56 г</span></summary>
+    <div class="body">
+      <div class="scroll"><table>
+        <tr><th>Продукт</th><th>На 10 порций</th></tr>
+        <tr><td>Свиная лопатка</td><td class="r">1000 г</td></tr>
+        <tr><td>Свиная корейка</td><td class="r">1200 г</td></tr>
+        <tr><td>Лук</td><td class="r">500 г</td></tr>
+        <tr><td>Морковь</td><td class="r">400 г</td></tr>
+        <tr><td>Томатная паста</td><td class="r">150 г</td></tr>
+        <tr><td>Паприка, лавровый лист</td><td class="r">по вкусу</td></tr>
+        <tr><td>Гарнир: картофель или гречка</td><td class="r">—</td></tr>
+      </table></div>
+      <h4>Как готовить</h4>
+      <p>Обжарь мясо порциями, не всё сразу — иначе пустит сок и будет варёным. Лук, морковь, паста, залей водой или бульоном и туши <b>полтора часа</b> на самом малом огне. Меньше нельзя — лопатка не станет мягкой.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Блюдо 6 · Паста болоньезе <span class="k">860 ккал · 60 г · больше всего белка</span></summary>
+    <div class="body">
+      <div class="scroll"><table>
+        <tr><th>Продукт</th><th>На 10 порций</th></tr>
+        <tr><td>Фарш говяжий 90/10</td><td class="r">2000 г</td></tr>
+        <tr><td>Паста (пенне или ротини)</td><td class="r">800 г</td></tr>
+        <tr><td>Пассата / томаты</td><td class="r">1200 г</td></tr>
+        <tr><td>Молоко</td><td class="r">200 мл</td></tr>
+        <tr><td>Пармезан</td><td class="r">150 г</td></tr>
+        <tr><td>Лук, морковь, сельдерей</td><td class="r">400 / 300 / 200 г</td></tr>
+      </table></div>
+      <h4>Как готовить</h4>
+      <p>Обжарь овощи, добавь фарш. Влей <b>молоко</b> и выпари — это не опечатка, от молока фарш становится мягким. Потом томаты и туши <b>45 минут без крышки</b>, чтобы соус загустел. Пасту вари <b>на 2 минуты меньше</b>, чем написано на пачке: она дойдёт в контейнере и не превратится в кашу при разогреве.</p>
+    </div>
+  </details>
+
+  <h2>Шейки</h2>
+
+  <div class="card">
+    <h3 style="margin-top:0">Шейк №1 — обязательный, в течение часа после подъёма <span class="tag g">870 ккал · 62 г</span></h3>
+    <div class="scroll"><table>
+      <tr><th>Что</th><th>Сколько</th></tr>
+      <tr><td>Безлактозное молоко</td><td class="r">400 мл</td></tr>
+      <tr><td>Изолят</td><td class="r">30 г</td></tr>
+      <tr><td>Овсянка</td><td class="r">60 г</td></tr>
+      <tr><td>Банан</td><td class="r">120 г</td></tr>
+      <tr><td>Арахисовая паста</td><td class="r">30 г</td></tr>
+      <tr><td>Мёд</td><td class="r">15 г</td></tr>
+    </table></div>
+    <p style="margin-bottom:0">Блендер, 40 секунд. Всё, кроме молока, можно сложить в банку с вечера.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Шейк №2 — догоняющий, только когда к вечеру не хватает 400–500 ккал <span class="tag b">440 ккал · 48 г</span></h3>
+    <div class="scroll"><table>
+      <tr><th>Что</th><th>Сколько</th></tr>
+      <tr><td>Молоко</td><td class="r">300 мл</td></tr>
+      <tr><td>Изолят</td><td class="r">30 г</td></tr>
+      <tr><td>Арахисовая паста</td><td class="r">30 г</td></tr>
+    </table></div>
+    <p style="margin-bottom:0"><b>Гейнер заменяет этот шейк один к одному.</b> У тебя Serious Mass: одна мерная ложка (не две) ≈ 630 ккал и 25 г белка — ближе всего по смыслу. Разводи водой или безлактозным молоком. Подробнее про гейнер — во вкладке «Покупки».</p>
+  </div>
+
+  <div class="warn">
+    <b>Про молоко.</b> У тебя непереносимость лактозы, а не аллергия на казеин — это разные вещи. Значит ультрафильтрованное молоко вроде Fairlife 2% тебе подходит: лактозы там почти нет, а белок на месте. Это дешёвые калории, не отказывайся от них. Если хочешь пить обычное молоко — есть таблетки лактазы, про них в «Покупках».
+  </div>
+
+  <h2>Перекусы</h2>
+  <div class="scroll"><table>
+    <tr><th>Что</th><th>Ккал</th><th>Белок</th></tr>
+    <tr><td>Орехи, 40 г</td><td class="r">260</td><td class="r">9 г</td></tr>
+    <tr><td>Банан + арахисовая паста</td><td class="r">290</td><td class="r">7 г</td></tr>
+    <tr><td>Греческий йогурт + мёд</td><td class="r">190</td><td class="r">20 г</td></tr>
+    <tr><td>Fairlife шоколадное, 340 мл</td><td class="r">250</td><td class="r">18 г</td></tr>
+    <tr><td>Бутерброд с индейкой</td><td class="r">300</td><td class="r">23 г</td></tr>
+    <tr><td>Сухофрукты + орехи</td><td class="r">230</td><td class="r">4 г</td></tr>
+  </table></div>
+
+  <h2>Сколько есть</h2>
+  <div class="scroll"><table>
+    <tr><th>Этап</th><th>Ккал в день</th><th>Когда</th></tr>
+    <tr><td>Уровень 1</td><td class="r">2650</td><td class="r">Недели 2–3</td></tr>
+    <tr><td>Уровень 2</td><td class="r">2800</td><td class="r">Недели 4–5</td></tr>
+    <tr><td>Уровень 3</td><td class="r">3140</td><td class="r">Если вес стоит две недели подряд</td></tr>
+  </table></div>
+  <p>Белок по факту выходит <b>165–185 г</b> — этого более чем достаточно. Когда поднимаем калории, добавляем <b>жиры и углеводы, а не белок</b>: белка уже хватает, а жиры дают калории компактнее всего.</p>
+  <div class="stop"><b>Ниже 2200 ккал не падать ни в какой день.</b> Даже в самый суматошный. Если видишь, что день разваливается — шейк №1 плюс шейк №2 плюс перекус уже дают почти 1600 ккал за десять минут суммарной возни.</div>
+
+  <div class="note" style="margin-bottom:0"><b>День на смене.</b> В сумку идут <b>два контейнера</b>, а не один. Это главная причина, по которой ты недобираешь: один контейнер уезжает с тобой, а смена оказывается длиннее, чем планировалось.</div>
+</section>
+
+<!-- ================= ТАБЛЕТКИ ================= -->
+<section class="tab" id="t-pills">
+  <h1>Таблетки</h1>
+  <p>Я посмотрел все одиннадцать банок, которые ты сфотографировал, и сложил их дозы вместе. Нашлась одна вещь, которую надо поправить сегодня, и несколько, на которых ты экономишь деньги зря.</p>
+
+  <div class="stop">
+    <b>Главное: витамина D у тебя выходит 5600 МЕ в день — это выше безопасного верхнего предела в 4000 МЕ.</b>
+    <div class="scroll"><table style="margin:10px 0 6px">
+      <tr><th>Банка</th><th>D3 в дневной дозе</th></tr>
+      <tr><td>Vitamin D3, 50 мкг</td><td class="r">2000 МЕ</td></tr>
+      <tr><td>Calcium 1200 мг (2 таблетки)</td><td class="r">1600 МЕ</td></tr>
+      <tr><td>Omega-3 (1 капсула)</td><td class="r">2000 МЕ</td></tr>
+      <tr><td><b>Итого</b></td><td class="r"><b>5600 МЕ</b></td></tr>
+    </table></div>
+    Три банки из твоей кухни содержат D3, и ты, скорее всего, об этом не знал — на лицевой стороне кальция и омеги он написан мелко. Само по себе это не отравление: клинические проблемы начинаются выше 10 000 МЕ в день, и то не сразу. Но жить годами выше верхнего предела незачем, тем более что исправляется это бесплатно и за минуту.
+  </div>
+
+  <div class="ok">
+    <b>Что сделать:</b> отложить отдельную банку Vitamin D3 (она не испортится, срок годности — годы) и пить кальций <b>по одной таблетке вместо двух</b>. Выходит 2800 МЕ D3 в день — хорошая рабочая доза, спокойно внутри предела. Кальция при этом остаётся 600 мг из банки плюс примерно 900 мг из твоей еды: при 13 литрах молока, килограмме йогурта и сметане в месяц кальций у тебя и так закрыт.
+  </div>
+
+  <h2>Схема на день</h2>
+
+  <div class="card">
+    <h3 style="margin-top:0"><span class="when">Утро</span> Кучка 1 — с первой едой</h3>
+    <label class="chk"><input type="checkbox" data-k="p1"><span><b>Омега-3 — 1 капсула</b><em>Member's Mark, 600 мг EPA+DHA. Обязательно с едой, где есть жир: это жирорастворимая капсула, натощак усвоится вполовину. Она же даёт тебе 2000 МЕ витамина D.</em></span></label>
+    <label class="chk"><input type="checkbox" data-k="p2"><span><b>Витамин C — 1 таблетка 500 мг</b><em>Nature Made, значок USP на банке — это хорошо, он означает независимую проверку содержимого.</em></span></label>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0"><span class="when">Обед</span> Кучка 2 — с едой</h3>
+    <label class="chk"><input type="checkbox" data-k="p3"><span><b>Кальций — 1 таблетка</b><em>Member's Mark 1200 мг. Именно одна, не две — см. выше. Кальций мешает усвоению цинка и магния, поэтому он днём, а они вечером.</em></span></label>
+    <label class="chk"><input type="checkbox" data-k="p4"><span><b>B-комплекс — 1 таблетка</b><em>Member's Mark Super B. Честно: при твоём питании он тебе не нужен, витамины группы B ты и так добираешь мясом и крупами. Вреда нет, лишнее уйдёт с мочой. Допьёшь банку — не покупай снова.</em></span></label>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0"><span class="when">Ужин</span> Кучка 3 — с едой</h3>
+    <label class="chk"><input type="checkbox" data-k="p5"><span><b>Цинк 30 мг — через день, а не каждый</b><em>Nature Made, USP. Норма — 11 мг, безопасный предел — 40 мг. Ты ешь около 400 г мяса в день, а это уже 12–15 мг цинка. 30 мг сверху каждый день выводит тебя за предел, а долгий избыток цинка вытесняет медь. Через день — ровно то, что надо. Не вместе с кальцием.</em></span></label>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0"><span class="when">Перед сном</span> Кучка 4</h3>
+    <label class="chk"><input type="checkbox" data-k="p6"><span><b>Магний глицинат — 2 таблетки</b><em>Member's Mark, с L-теанином. Глицинат — хорошая форма: усваивается около 19% против примерно 4% у дешёвого оксида. Побочный эффект приятный — легче засыпать, а при твоём плавающем графике это ценно.</em></span></label>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0"><span class="when">Когда</span> В любое время, но каждый день</h3>
+    <label class="chk"><input type="checkbox" data-k="p7"><span><b>Креатин — 5 г</b><em>Да, это он — Optimum Nutrition Micronized Creatine Powder, 100% моногидрат, 5 г на мерную ложку, 60 порций, с пометкой Banned Substance Tested. Настоящий, правильный, ничего менять не надо. Размешивай в чём угодно: вода, шейк, сок. <b>Включая дни без зала</b> — креатин работает накоплением, а не разово.</em></span></label>
+    <label class="chk"><input type="checkbox" data-k="p8"><span><b>Гейнер / шейк №2 — по ситуации</b><em>Serious Mass. Одна ложка, не две. Подробности — во вкладке «Покупки».</em></span></label>
+  </div>
+
+  <h2>Что с остальными банками</h2>
+  <div class="scroll"><table>
+    <tr><th>Банка</th><th>Вердикт</th></tr>
+    <tr><td>Vitamin D3 50 мкг</td><td class="r"><span class="tag y">отложить</span> Убрать в шкаф, пока кальций и омега дают D3. Не выбрасывать.</td></tr>
+    <tr><td>Amino Energy</td><td class="r"><span class="tag b">можно</span> По сути это кофеин (~100 мг на 2 ложки) с аминокислотами. Аминокислоты лишние, кофеин перед залом реально помогает. <b>Не позже чем за 8 часов до сна</b> — с твоим графиком это легко прошляпить.</td></tr>
+    <tr><td>L-Glutamine 5000 мг</td><td class="r"><span class="tag r">допить и не брать</span> На набор массы не влияет никак, доказательств нет. Банку допей, деньги на новую не трать.</td></tr>
+    <tr><td>Мультивитамины</td><td class="r"><span class="tag g">не нужны</span> Тебе их покупать не надо: C, D, цинк, магний, омега и группа B у тебя уже есть по отдельности, причём в дозах выше, чем в любой мультитаблетке.</td></tr>
+  </table></div>
+
+  <div class="warn">
+    <b>Важно про анализы.</b> В твоём B-комплексе 1000 мкг биотина. Биотин искажает результаты многих лабораторных тестов — щитовидки, тропонина, витамина D — причём в обе стороны. Если идёшь сдавать кровь, <b>перестань его пить за 3 дня</b> и скажи об этом в лаборатории.
+  </div>
+
+  <h2>Что ещё стоит добавить</h2>
+  <p>Ты просил посмотреть, чего не хватает. Вот всё, что я считаю осмысленным, честно с оценкой доказательств — и то, что покупать не надо.</p>
+  <div class="scroll"><table>
+    <tr><th>Что</th><th>Насколько доказано</th><th>Зачем тебе</th></tr>
+    <tr><td><b>Лактаза</b></td><td><span class="tag g">сильно</span></td><td class="r">Самое полезное из списка. Таблетка перед молочным — и обычное молоко, сметана, сыр перестают быть проблемой. Для набора массы молоко — самые дешёвые калории, которые существуют.</td></tr>
+    <tr><td><b>Кофеин</b></td><td><span class="tag b">умеренно</span></td><td class="r">Реально повышает рабочие веса и объём тренировки. У тебя уже есть в Amino Energy — отдельно покупать не обязательно.</td></tr>
+    <tr><td><b>Клетчатка (псиллиум)</b></td><td><span class="tag b">умеренно</span></td><td class="r">Ты ешь очень много мяса, риса и молочного. Ложка псиллиума вечером решает самую частую бытовую проблему массонабора.</td></tr>
+    <tr><td><b>Витамин K2</b></td><td><span class="tag y">слабо</span></td><td class="r">Имело бы смысл, если бы ты оставался на 5600 МЕ D3. После того как мы снизим до 2800 — не обязателен.</td></tr>
+    <tr><td>Электролиты</td><td><span class="tag y">слабо</span></td><td class="r">Нужны при жаре и долгих сессиях. У тебя час в кондиционированном зале — хватит воды.</td></tr>
+    <tr><td>BCAA</td><td><span class="tag r">нет</span></td><td class="r">Бессмысленны, когда белка и так 170 г в день: целый белок содержит все те же аминокислоты и ещё остальные.</td></tr>
+    <tr><td>Тестостероновые бустеры</td><td><span class="tag r">нет</span></td><td class="r">Ни одна безрецептурная добавка не поднимает тестостерон у здорового 25-летнего парня сколько-нибудь заметно.</td></tr>
+    <tr><td>HMB</td><td><span class="tag r">нет</span></td><td class="r">Эффект у новичков крошечный, у тренированных — не находится вовсе. Цена не оправдана.</td></tr>
+  </table></div>
+
+  <div class="note" style="margin-bottom:0">
+    <b>Проверка на безопасность, о которой ты просил.</b> Я сверил все дозы с верхними допустимыми уровнями. После правки с витамином D ничего в твоём наборе не превышает норм и ничто не блокирует друг друга: кальций разведён по времени с цинком и магнием, железа нет нигде (и хорошо — лишнее железо мужчине ни к чему), жирорастворимые идут с едой. Единственное, за чем стоит следить дальше — биотин перед анализами.
+  </div>
+</section>
+
+<!-- ================= ЗАЛ ================= -->
+<section class="tab" id="t-gym">
+  <h1>Зал</h1>
+  <p>Четыре тренировки в неделю, 60–75 минут. Идут <b>по кругу A → B → C → D</b>, а не по дням недели — это специально сделано под твой плавающий график. Пропустил день — просто делаешь следующую по очереди, когда получится. Ничего не «сгорает».</p>
+
+  <div class="kpi">
+    <div><b>4</b><small>в неделю</small></div>
+    <div><b>60–75</b><small>минут</small></div>
+    <div><b>1–2</b><small>RIR в запасе</small></div>
+    <div><b>7-я</b><small>неделя — разгрузка</small></div>
+  </div>
+
+  <details open>
+    <summary>Тренировка A · Верх, жимовая <span class="k">грудь · плечи · трицепс</span></summary>
+    <div class="body"><div class="scroll"><table>
+      <tr><th>Упражнение</th><th>Подходы × повторы</th></tr>
+      <tr><td>Жим в тренажёре на грудь (chest press)</td><td class="r">3 × 8–10</td></tr>
+      <tr><td>Жим гантелей лёжа, наклон 30°</td><td class="r">3 × 8–12</td></tr>
+      <tr><td>Жим сидя на плечи</td><td class="r">3 × 10–12</td></tr>
+      <tr><td>Сведения в тренажёре (pec deck)</td><td class="r">2 × 12–15</td></tr>
+      <tr><td>Подъёмы гантелей в стороны</td><td class="r">3 × 12–15</td></tr>
+      <tr><td>Трицепс на блоке, верёвка</td><td class="r">3 × 12–15</td></tr>
+      <tr><td>Французский жим из-за головы</td><td class="r">2 × 12–15</td></tr>
+    </table></div></div>
+  </details>
+
+  <details>
+    <summary>Тренировка B · Низ <span class="k">ноги · пресс</span></summary>
+    <div class="body"><div class="scroll"><table>
+      <tr><th>Упражнение</th><th>Подходы × повторы</th></tr>
+      <tr><td>Жим ногами</td><td class="r">3 × 10–12</td></tr>
+      <tr><td>Сгибание ног лёжа</td><td class="r">3 × 10–12</td></tr>
+      <tr><td>Гакк-присед</td><td class="r">3 × 8–10</td></tr>
+      <tr><td>Разгибание ног сидя</td><td class="r">2 × 12–15</td></tr>
+      <tr><td>Румынская тяга с гантелями</td><td class="r">3 × 10–12</td></tr>
+      <tr><td>Икры стоя</td><td class="r">4 × 10–15</td></tr>
+      <tr><td>Скручивания на блоке</td><td class="r">3 × 12–15</td></tr>
+      <tr><td>Планка</td><td class="r">3 × 30–45 сек</td></tr>
+    </table></div></div>
+  </details>
+
+  <details>
+    <summary>Тренировка C · Верх, тянущая <span class="k">спина · бицепс</span></summary>
+    <div class="body"><div class="scroll"><table>
+      <tr><th>Упражнение</th><th>Подходы × повторы</th></tr>
+      <tr><td>Тяга верхнего блока</td><td class="r">3 × 8–12</td></tr>
+      <tr><td>Гребная тяга с упором в грудь</td><td class="r">3 × 8–12</td></tr>
+      <tr><td>Тяга узким обратным хватом</td><td class="r">3 × 10–12</td></tr>
+      <tr><td>Тяга одной рукой</td><td class="r">2 × 10–12</td></tr>
+      <tr><td>Обратные сведения (reverse pec deck)</td><td class="r">3 × 12–15</td></tr>
+      <tr><td>Шраги</td><td class="r">3 × 12–15</td></tr>
+      <tr><td>Бицепс на наклонной скамье</td><td class="r">3 × 10–12</td></tr>
+      <tr><td>Молотковые сгибания</td><td class="r">2 × 12–15</td></tr>
+    </table></div></div>
+  </details>
+
+  <details>
+    <summary>Тренировка D · Низ + плечи, руки, грудь <span class="k">добор объёма</span></summary>
+    <div class="body"><div class="scroll"><table>
+      <tr><th>Упражнение</th><th>Подходы × повторы</th></tr>
+      <tr><td>Жим ногами, стопы выше</td><td class="r">3 × 12–15</td></tr>
+      <tr><td>Сгибание ног сидя</td><td class="r">3 × 10–12</td></tr>
+      <tr><td>Икры сидя</td><td class="r">4 × 12–15</td></tr>
+      <tr><td>Жим на грудь под наклоном</td><td class="r">3 × 10–12</td></tr>
+      <tr><td>Жим гантелей сидя</td><td class="r">3 × 10–12</td></tr>
+      <tr><td>Подъём в стороны на блоке</td><td class="r">3 × 12–15</td></tr>
+      <tr><td>Брусья или жим узким хватом</td><td class="r">3 × 10–12</td></tr>
+      <tr><td>Бицепс на блоке</td><td class="r">3 × 12–15</td></tr>
+      <tr><td>Подъём ног в висе</td><td class="r">3 × 10–15</td></tr>
+    </table></div></div>
+  </details>
+
+  <h2>Как расти в весах</h2>
+  <div class="card">
+    <h3 style="margin-top:0">Двойная прогрессия — единственное правило, которое надо помнить</h3>
+    <p>Допустим, упражнение идёт 3 × 8–10. Ты взял вес и сделал <b>8-8-8</b>. На следующей тренировке стараешься <b>9-8-8</b>, потом <b>9-9-8</b>, и так до <b>10-10-10</b>. Как только все три подхода по 10 — <b>добавляешь вес и возвращаешься к 8</b>. И по кругу.</p>
+    <p style="margin-bottom:0">Это и есть весь прогресс. Не нужно ничего высчитывать и ничего менять каждую неделю.</p>
+  </div>
+
+  <div class="scroll"><table>
+    <tr><th>Правило</th><th>Как</th></tr>
+    <tr><td>Насколько тяжело</td><td class="r">Оставляй 1–2 повтора в запасе. Первые три месяца до отказа не ходи вообще — отказ не ускорит рост, зато гарантированно замедлит восстановление.</td></tr>
+    <tr><td>Отдых между подходами</td><td class="r">2–3 минуты на базовых, 60–90 секунд на мелких. Таймер — в приложении, не на глаз.</td></tr>
+    <tr><td>Если застрял</td><td class="r">Три тренировки подряд без движения вперёд — скинь 10% веса и иди вверх заново. Это нормально и случается у всех.</td></tr>
+    <tr><td>Разгрузка</td><td class="r">Каждая 7-я неделя: те же упражнения, но 2 подхода вместо 3 и 85% веса.</td></tr>
+    <tr><td>Когда менять программу</td><td class="r">Через 12–16 недель, не раньше. Менять чаще — значит никогда не узнать, работала ли она.</td></tr>
+    <tr><td>Кардио</td><td class="r">Специального — ноль. Тебе нужно набирать, а не тратить. 7–8 тысяч шагов в день достаточно.</td></tr>
+  </table></div>
+
+  <h2>Техника: как не гадать</h2>
+  <p>Четыре шага каждый раз, когда садишься в незнакомый тренажёр:</p>
+  <ol>
+    <li>Выстави сиденье так, чтобы <b>ось вращения тренажёра совпала с твоим суставом</b>.</li>
+    <li>Прижми лопатки и таз к спинке и не отрывай их в течение подхода.</li>
+    <li>Сделай один пустой повтор без веса — проверь, что амплитуда полная и ничего не упирается.</li>
+    <li>Запиши номер настройки сиденья в заметку упражнения в приложении. В следующий раз не будешь подбирать заново.</li>
+  </ol>
+  <div class="note"><b>Бесплатный способ проверить себя.</b> В Lifetime есть дежурный тренер в зале. Подойти и спросить «can you check my setup on this machine?» — это бесплатно и занимает минуту. Для этого не нужно покупать персоналки.</div>
+
+  <h3>Что искать на видео</h3>
+  <p>Библиотека упражнений есть прямо в приложении-дневнике. Если хочешь глубже — Jeff Nippard, Renaissance Periodization, Built With Science. Поисковые фразы по-английски, так находится лучше:</p>
+  <div class="scroll"><table>
+    <tr><th>Упражнение</th><th>Запрос</th></tr>
+    <tr><td>Жим в тренажёре</td><td class="r">chest press machine proper form</td></tr>
+    <tr><td>Жим гантелей наклон</td><td class="r">incline dumbbell press form</td></tr>
+    <tr><td>Тяга верхнего блока</td><td class="r">lat pulldown proper form</td></tr>
+    <tr><td>Гребная тяга</td><td class="r">chest supported row form</td></tr>
+    <tr><td>Гакк-присед</td><td class="r">hack squat proper form</td></tr>
+    <tr><td>Румынская тяга</td><td class="r">dumbbell romanian deadlift form</td></tr>
+    <tr><td>Подъём ног в висе</td><td class="r">hanging leg raise form</td></tr>
+    <tr><td>Подъёмы в стороны</td><td class="r">lateral raise common mistakes</td></tr>
+  </table></div>
+
+  <h2>Про «рельеф в расслабленном состоянии»</h2>
+  <div class="card" style="margin-bottom:0">
+    <p>Ты спрашивал об этом, и ответ приятный: при 63,5 кг на 173 см ты уже сухой. Тебе нечего «сушить» — жира и так мало. Всё, что сделает тебя визуально заметнее в футболке, — это <b>объём</b>, и именно его мы и набираем.</p>
+    <p>Четыре места решают почти всё: <b>средние дельты</b> (от них плечи выглядят шире), <b>широчайшие</b> (от них спина — буквой V), <b>верх груди</b> и <b>пресс</b>. Пресс при твоём проценте жира видно и так, его надо просто сделать толще — поэтому в программе он идёт <b>с весом на 10–15 повторов</b>, а не бесконечные скручивания.</p>
+    <p style="margin-bottom:0"><b>Сроки честно:</b> в зеркале изменения станут очевидны через 8–12 недель. За полгода при хорошем выполнении — 4–4,5 кг мышц. Это не мало, это нормальная скорость для натурального новичка, и быстрее не бывает ни у кого, кто говорит правду.</p>
+  </div>
+</section>
+
+<!-- ================= ПОКУПКИ ================= -->
+<section class="tab" id="t-shop">
+  <h1>Покупки</h1>
+  <p>Две части: продукты на месяц (по ним считается бюджет) и добавки со ссылками. Цены на добавки меняются чуть ли не каждую неделю, поэтому я даю <b>точные названия и ссылки на поиск</b> — они не протухнут, — а не суммы, которые завтра будут неправдой.</p>
+
+  <h2>Продукты на месяц</h2>
+  <details open>
+    <summary>Мясо · ~12,4 кг <span class="k">105–115 $</span></summary>
+    <div class="body"><div class="scroll"><table>
+      <tr><td>Куриные бёдра</td><td class="r">2800 г</td></tr>
+      <tr><td>Куриная грудка</td><td class="r">1600 г</td></tr>
+      <tr><td>Фарш говяжий 90/10</td><td class="r">5800 г</td></tr>
+      <tr><td>Свиная лопатка</td><td class="r">1000 г</td></tr>
+      <tr><td>Свиная корейка</td><td class="r">1200 г</td></tr>
+    </table></div>
+    <p style="margin-bottom:0"><small>Фарш 90/10 бери в Sam's Club большими упаковками и сразу раскладывай по пакетам в морозилку — это самая большая строка бюджета и самая большая экономия.</small></p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Крупы и паста <span class="k">14–18 $</span></summary>
+    <div class="body"><div class="scroll"><table>
+      <tr><td>Гречка</td><td class="r">2400 г — <b>не в Sam's Club</b>, а в русском или европейском магазине</td></tr>
+      <tr><td>Рис</td><td class="r">1100 г — выгоднее брать мешок 25 lb</td></tr>
+      <tr><td>Паста (пенне, ротини)</td><td class="r">800 г</td></tr>
+      <tr><td>Овсянка</td><td class="r">1800 г</td></tr>
+    </table></div></div>
+  </details>
+
+  <details>
+    <summary>Молочное <span class="k">50–60 $</span></summary>
+    <div class="body"><div class="scroll"><table>
+      <tr><td>Безлактозное молоко</td><td class="r">12–14 л (Fairlife 2% или аналог)</td></tr>
+      <tr><td>Сметана</td><td class="r">1000 г</td></tr>
+      <tr><td>Сливки</td><td class="r">300 мл</td></tr>
+      <tr><td>Пармезан</td><td class="r">150 г</td></tr>
+      <tr><td>Греческий йогурт</td><td class="r">1000 г</td></tr>
+    </table></div></div>
+  </details>
+
+  <details>
+    <summary>Консервы и овощи <span class="k">30–38 $</span></summary>
+    <div class="body"><div class="scroll"><table>
+      <tr><td>Томаты (crushed / пассата)</td><td class="r">5000 г</td></tr>
+      <tr><td>Томатная паста</td><td class="r">300 г</td></tr>
+      <tr><td>Фасоль</td><td class="r">1500 г</td></tr>
+      <tr><td>Кукуруза</td><td class="r">400 г</td></tr>
+      <tr><td>Лук</td><td class="r">2500 г</td></tr>
+      <tr><td>Морковь</td><td class="r">1000 г</td></tr>
+      <tr><td>Шампиньоны</td><td class="r">800 г</td></tr>
+      <tr><td>Перец болгарский</td><td class="r">400 г</td></tr>
+      <tr><td>Сельдерей</td><td class="r">200 г</td></tr>
+    </table></div></div>
+  </details>
+
+  <details>
+    <summary>Протеин, паста, бананы, орехи, мёд <span class="k">60–70 $</span></summary>
+    <div class="body"><div class="scroll"><table>
+      <tr><td>Изолят</td><td class="r">~1000 г</td></tr>
+      <tr><td>Арахисовая паста</td><td class="r">900–1500 г</td></tr>
+      <tr><td>Бананы</td><td class="r">3,6–5 кг</td></tr>
+      <tr><td>Орехи</td><td class="r">600 г</td></tr>
+      <tr><td>Мёд</td><td class="r">500 г</td></tr>
+    </table></div></div>
+  </details>
+
+  <details>
+    <summary>Масло, бульон, специи <span class="k">12–18 $</span></summary>
+    <div class="body"><p style="margin:0">Оливковое и растительное масло, куриный бульон, паприка, зира, чили, garam masala, лавровый лист, чеснок, соль, перец. Специи покупаются раз в несколько месяцев, в месячный бюджет попадают частично.</p></div>
+  </details>
+
+  <div class="card">
+    <h3 style="margin-top:0">Бюджет на месяц</h3>
+    <div class="kpi">
+      <div><b>~295 $</b><small>еда</small></div>
+      <div><b>~40 $</b><small>добавки</small></div>
+      <div><b>~10 $</b><small>на день</small></div>
+    </div>
+    <p style="margin-bottom:0"><small>Это честный пересчёт по граммам из рецептов, цены — оценка для района Сакраменто. В старой версии документа стояло 265 $ — та цифра была занижена, не удивляйся расхождению.</small></p>
+  </div>
+
+  <h2>Протеин — что брать</h2>
+  <p>Тебе нужен примерно 1 кг изолята или концентрата в месяц. Разброс цен между марками — больше чем вдвое при одинаковом составе, так что это место, где реально экономятся деньги.</p>
+  <div class="scroll"><table>
+    <tr><th>Вариант</th><th>Почему</th><th>Где</th></tr>
+    <tr><td><b>Kirkland Signature Whey</b><br><small>Costco, 5,4 lb</small></td><td class="r">Самый дешёвый грамм белка из всех, что я нашёл. Сертификат Informed Choice — независимая проверка на запрещённые вещества есть. <b>Лучший выбор по деньгам.</b></td><td><a href="https://www.costco.com/CatalogSearch?dept=All&keyword=kirkland%20whey%20protein" target="_blank" rel="noopener">Costco</a></td></tr>
+    <tr><td><b>NOW Sports Whey Isolate</b></td><td class="r">Сертификат Informed Sport — самый строгий из массовых. Если хочешь максимальную уверенность в чистоте, это он.</td><td><a href="https://www.amazon.com/s?k=NOW+Sports+Whey+Protein+Isolate" target="_blank" rel="noopener">Amazon</a> · <a href="https://www.nowfoods.com/" target="_blank" rel="noopener">сайт</a></td></tr>
+    <tr><td><b>Dymatize ISO100</b></td><td class="r">NSF Certified for Sport — та же строгость. Дороже, вкус лучше, гидролизат усваивается чуть быстрее (для тебя это роли не играет).</td><td><a href="https://www.amazon.com/s?k=Dymatize+ISO100" target="_blank" rel="noopener">Amazon</a></td></tr>
+    <tr><td><b>Nutricost / BulkSupplements изолят</b></td><td class="r">Дёшево за килограмм, вкуса почти нет (есть unflavored — удобно для шейка с бананом). Сертификата на запрещённые вещества нет, но ты не выступаешь — тебе это и не нужно.</td><td><a href="https://www.amazon.com/s?k=Nutricost+whey+protein+isolate" target="_blank" rel="noopener">Amazon</a> · <a href="https://www.bulksupplements.com/" target="_blank" rel="noopener">сайт</a></td></tr>
+    <tr><td>Optimum Nutrition Gold Standard</td><td class="r">Нормальный, но переплата за имя. Если видишь по акции — бери, специально искать не стоит.</td><td><a href="https://www.amazon.com/s?k=Optimum+Nutrition+Gold+Standard+Whey+5+lb" target="_blank" rel="noopener">Amazon</a></td></tr>
+  </table></div>
+
+  <h2>Гейнер — и нужен ли он вообще</h2>
+  <div class="card">
+    <p>У тебя уже стоит <b>Optimum Nutrition Serious Mass</b>, 6 lb, шоколад: 1260 ккал и 50 г белка на <b>две</b> ложки. Две ложки — это огромная порция, которая у худого парня просто отобьёт аппетит перед нормальной едой. <b>Используй одну</b> ≈ 630 ккал, 25 г белка.</p>
+    <p>Честно, прежде чем ты купишь следующую банку: <b>домашний гейнер дешевле примерно вдвое за ту же калорию</b> и состоит не из мальтодекстрина.</p>
+    <div class="scroll"><table>
+      <tr><th></th><th>Что внутри</th><th>Итог</th></tr>
+      <tr><td><b>Домашний</b></td><td class="r">400 мл молока + 60 г овсянки + банан + 30 г арахисовой пасты + 30 г изолята</td><td class="r">~870 ккал, 62 г белка — это и есть твой шейк №1</td></tr>
+      <tr><td>Serious Mass</td><td class="r">2 ложки</td><td class="r">1260 ккал, 50 г белка, из них сахара и мальтодекстрина больше половины</td></tr>
+    </table></div>
+    <p style="margin-bottom:0">Вывод: банку допей, она нормальная и выручает в дни, когда готовить некогда. Но планировать питание вокруг гейнера не надо — <a href="#" data-go="food">шейк №1</a> делает то же самое и вкуснее. Если всё же захочешь купить ещё: <a href="https://www.amazon.com/s?k=mass+gainer+protein+powder" target="_blank" rel="noopener">гейнеры на Amazon</a>, <a href="https://www.samsclub.com/s/mass%20gainer" target="_blank" rel="noopener">Sam's Club</a>.</p>
+  </div>
+
+  <h2>Добавки — ссылки на всё</h2>
+  <div class="scroll"><table>
+    <tr><th>Что</th><th>Что брать</th><th>Ссылка</th></tr>
+    <tr><td><b>Креатин</b></td><td class="r">У тебя уже правильный. Когда кончится — дешевле всего моногидрат в килограммовых пакетах: Nutricost, BulkSupplements, Micro Ingredients. Переплачивать за Creapure смысла нет: моногидрат есть моногидрат.</td><td><a href="https://www.amazon.com/s?k=creatine+monohydrate+powder+1kg" target="_blank" rel="noopener">Amazon</a> · <a href="https://www.bulksupplements.com/products/creatine-monohydrate" target="_blank" rel="noopener">Bulk</a></td></tr>
+    <tr><td><b>Лактаза</b> <span class="tag g">добавить</span></td><td class="r">Lactaid Fast Act или дешёвый аналог Lactase 9000 FCC. Таблетка перед молочным — и обычное молоко снова твоё.</td><td><a href="https://www.amazon.com/s?k=lactase+enzyme+9000+FCC" target="_blank" rel="noopener">Amazon</a></td></tr>
+    <tr><td><b>Клетчатка</b> <span class="tag g">добавить</span></td><td class="r">Псиллиум (psyllium husk), порошок. Ложка вечером.</td><td><a href="https://www.amazon.com/s?k=psyllium+husk+powder" target="_blank" rel="noopener">Amazon</a></td></tr>
+    <tr><td>Магний</td><td class="r">Твой Member's Mark глицинат — отличный выбор, ничего менять не надо. Главное правило на будущее: <b>глицинат или цитрат, не оксид</b>.</td><td><a href="https://www.samsclub.com/s/magnesium%20glycinate" target="_blank" rel="noopener">Sam's Club</a></td></tr>
+    <tr><td>Цинк</td><td class="r">Твой Nature Made 30 мг со значком USP — хороший. Когда кончится, бери 15 мг: при твоём мясном рационе этого достаточно.</td><td><a href="https://www.amazon.com/s?k=zinc+15+mg+USP" target="_blank" rel="noopener">Amazon</a></td></tr>
+    <tr><td>Омега-3</td><td class="r">Твоя Member's Mark даёт 600 мг EPA+DHA — рабочая доза и очень дёшево. Если захочется максимального качества — марки с пятью звёздами IFOS: Sports Research Triple Strength, Nordic Naturals, Viva Naturals.</td><td><a href="https://www.amazon.com/s?k=triple+strength+omega+3+IFOS" target="_blank" rel="noopener">Amazon</a> · <a href="https://www.samsclub.com/s/omega%203" target="_blank" rel="noopener">Sam's</a></td></tr>
+    <tr><td>Витамин D3</td><td class="r">Пока не покупать — у тебя его три источника. Когда понадобится: Nature Made 2000 МЕ со значком USP, копейки.</td><td><a href="https://www.amazon.com/s?k=Nature+Made+Vitamin+D3+2000+IU" target="_blank" rel="noopener">Amazon</a></td></tr>
+    <tr><td>Витамин C</td><td class="r">Твой Nature Made 500 мг USP. Здесь переплата не даёт вообще ничего.</td><td><a href="https://www.amazon.com/s?k=Nature+Made+vitamin+C+500+mg" target="_blank" rel="noopener">Amazon</a></td></tr>
+    <tr><td>Мультивитамины</td><td class="r"><b>Не покупай.</b> У тебя всё уже есть по отдельности. Если когда-нибудь захочешь один флакон вместо шести — Thorne Basic Nutrients 2/Day, без железа, с сертификатом NSF.</td><td><a href="https://www.amazon.com/s?k=Thorne+Basic+Nutrients+2+Day" target="_blank" rel="noopener">Amazon</a></td></tr>
+    <tr><td>Кофеин</td><td class="r">Отдельно не нужен — у тебя Amino Energy. Если захочешь точную дозу: таблетки 100–200 мг.</td><td><a href="https://www.amazon.com/s?k=caffeine+tablets+200+mg" target="_blank" rel="noopener">Amazon</a></td></tr>
+  </table></div>
+
+  <div class="note">
+    <b>Как читать банку за 5 секунд.</b> Ищи на этикетке один из значков: <b>USP Verified</b>, <b>NSF Certified for Sport</b>, <b>Informed Sport / Informed Choice</b>, а для рыбьего жира — <b>IFOS 5 звёзд</b>. Это значит, что независимая лаборатория проверила: внутри то, что написано, и нет того, чего не должно быть. Без значка банка не обязательно плохая, но тебе никто ничего не обещал. На твоих Nature Made значок USP есть — это правильные покупки.
+  </div>
+  <p><small>Ссылки ведут на поиск, а не на конкретный товар, и это сделано нарочно: конкретные страницы умирают, цены скачут, а поиск по точному названию работает всегда и сразу покажет, у кого сегодня дешевле.</small></p>
+</section>
+
+<!-- ================= ПРОГРЕСС ================= -->
+<section class="tab" id="t-prog">
+  <h1>Прогресс</h1>
+  <p>Всё, что мы отслеживаем, и откуда оно берётся. Руками ты делаешь только одно: встаёшь утром на весы. Остальное приезжает само.</p>
+
+  <h2>Что куда стекается</h2>
+  <div class="scroll"><table>
+    <tr><th>Что</th><th>Источник</th><th>Твои действия</th></tr>
+    <tr><td>Вес, % жира, мышечная масса</td><td class="r">Весы RENPHO → приложение Renpho → Apple Health</td><td><span class="tag g">встать на весы</span></td></tr>
+    <tr><td>Сон, фазы, пульс покоя, HRV</td><td class="r">Oura Ring → Apple Health</td><td><span class="tag g">автоматом</span></td></tr>
+    <tr><td>Шаги, активные калории</td><td class="r">iPhone + Oura → Apple Health</td><td><span class="tag g">автоматом</span></td></tr>
+    <tr><td>Всё из Apple Health</td><td class="r">Health Auto Export → папка «Данные» в Google Drive</td><td><span class="tag g">автоматом</span></td></tr>
+    <tr><td>Тренировки, веса, подходы</td><td class="r">Приложение-дневник в зале</td><td><span class="tag b">записывать подходы</span></td></tr>
+    <tr><td>Галочки дня, шейк, креатин, таблетки</td><td class="r">Заметка «Фитнес — неделя N» в Apple Notes</td><td><span class="tag b">отмечать</span></td></tr>
+    <tr><td>Калории и белок</td><td class="r">Приложение подсчёта еды</td><td><span class="tag y">скриншот в папку раз в неделю</span></td></tr>
+    <tr><td>Обхваты и фото</td><td class="r">Раз в две недели</td><td><span class="tag y">руками</span></td></tr>
+  </table></div>
+
+  <div class="warn">
+    <b>Честно о том, как я вижу эти данные.</b> Путей два, и мы проверяем их по очереди. Первый: у приложения <b>Claude на айфоне</b> с января 2026 есть встроенное подключение к Apple Health — бета, США, планы Pro и Max. Если оно заработает и данные будут видны не только в телефоне, это самый чистый вариант и возни не нужно вообще. Второй, запасной: <b>Health Auto Export</b> раз в день кладёт выгрузку в папку Google Drive, <b>а папку я читать умею</b>. Чего нет ни в одном из путей — прямого доступа к кольцу и к весам: они отдают данные только в Apple Health, и дальше я беру уже оттуда. Врать, что я «подключился к твоему кольцу», я не буду.
+  </div>
+
+  <h2>Обхваты — раз в две недели</h2>
+  <p>Вес врёт на коротких отрезках: вода, еда в кишечнике, соль. Сантиметр не врёт. Мерить утром, натощак, расслабленно, одной и той же лентой.</p>
+  <div class="scroll"><table>
+    <tr><th>Где</th><th>Как именно</th></tr>
+    <tr><td>Грудь</td><td class="r">По соскам, руки опущены, на выдохе</td></tr>
+    <tr><td>Бицепс</td><td class="r">В напряжении, самая толстая точка — обе руки</td></tr>
+    <tr><td>Талия</td><td class="r">На уровне пупка, не втягивать живот</td></tr>
+    <tr><td>Бедро</td><td class="r">На 15 см выше колена</td></tr>
+    <tr><td>Икра</td><td class="r">Самая толстая точка</td></tr>
+    <tr><td>Плечи</td><td class="r">Вокруг дельт в самом широком месте</td></tr>
+  </table></div>
+
+  <h3>Фото</h3>
+  <p>Раз в две недели, три кадра: спереди, сбоку, сзади. Одно и то же место, тот же свет, те же шорты, руки опущены и расслаблены. Складывай в ту же папку «Данные». Через два месяца эти фото скажут тебе больше, чем весы, — именно на них видно то, чего в зеркале каждый день не замечаешь.</p>
+
+  <h2>Как я принимаю решение в воскресенье</h2>
+  <div class="card">
+    <div class="scroll"><table>
+      <tr><th>Что вижу</th><th>Что делаю</th></tr>
+      <tr><td>+0,2–0,3 кг в неделю по среднему за две недели</td><td class="r">Ничего не трогаю. Это идеальный темп.</td></tr>
+      <tr><td>Ноль или минус</td><td class="r">+200 ккал в день</td></tr>
+      <tr><td>Больше +0,5 кг в неделю</td><td class="r">−200 ккал: быстрее — значит больше жира, а не мышц</td></tr>
+      <tr><td>Первые две недели креатина</td><td class="r">Не считаю вовсе — там вода, а не мышцы</td></tr>
+      <tr><td>Реально съедено на 500+ меньше плана</td><td class="r">Чиню логистику, а не план: калории поднимать бессмысленно, если и текущие не съедаются</td></tr>
+      <tr><td>Сон меньше 6 часов две недели подряд</td><td class="r">Это важнее всего остального. Сначала сон.</td></tr>
+      <tr><td>2 тренировки и меньше две недели подряд</td><td class="r">Перестраиваю программу на 3 дня — лучше три выполненные, чем четыре на бумаге</td></tr>
+    </table></div>
+    <p style="margin-bottom:0"><b>За раз я меняю ровно одну вещь</b> и объясняю почему одним-двумя предложениями. Если менять по три — потом не поймёшь, что сработало.</p>
+  </div>
+
+  <div class="ok" style="margin-bottom:0"><b>Про страх, что не сработает.</b> Ты не первый худой парень, который боится, что у него «просто такая конституция». Конституция влияет на скорость, а не на факт. При честных 2800 ккал, четырёх тренировках и нормальном сне вес растёт у всех без исключения — вопрос только в том, были ли эти 2800 на самом деле. Поэтому мы и считаем, а не гадаем.</div>
+</section>
+
+<!-- ================= НАСТРОЙКА ================= -->
+<section class="tab" id="t-setup">
+  <h1>Настройка</h1>
+  <p>Один вечер работы, дальше система крутится сама. Делай по порядку — каждый пункт независимый, если на каком-то застрял, пропусти и иди дальше.</p>
+
+  <details open>
+    <summary>1 · Сайт на экран iPhone <span class="k">1 минута</span></summary>
+    <div class="body">
+      <ol>
+        <li>Открой этот сайт в <b>Safari</b> (именно Safari, в Chrome не сработает).</li>
+        <li>Нажми кнопку <b>«Поделиться»</b> — квадрат со стрелкой вверх внизу экрана.</li>
+        <li>Пролистай вниз и выбери <b>«На экран "Домой"»</b>.</li>
+        <li>Включи переключатель <b>«Открывать как веб-приложение»</b> — тогда откроется без адресной строки, как настоящее приложение.</li>
+        <li>Нажми <b>«Добавить»</b>.</li>
+      </ol>
+      <p style="margin-bottom:0">Теперь на экране есть иконка. Нажал — сразу вкладка «Сегодня».</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>2 · Весы RENPHO → Apple Health <span class="k">3 минуты</span></summary>
+    <div class="body">
+      <ol>
+        <li>Поставь приложение <b>Renpho Health</b>. Аккаунт можно не создавать — есть гостевой режим.</li>
+        <li>При первом запуске выскочит запрос на доступ к данным здоровья — нажми <b>«Разрешить»</b> вверху справа.</li>
+        <li>Подключи весы по Bluetooth и встань на них один раз, чтобы приложение увидело замер.</li>
+        <li>Открой приложение <b>Здоровье</b> → твоя иконка вверху справа → <b>«Приложения»</b> → <b>Renpho Health</b> → <b>«Включить все категории»</b>.</li>
+      </ol>
+      <p style="margin-bottom:0">После этого вес, процент жира, ИМТ и мышечная масса попадают в Здоровье сами при каждом взвешивании.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>3 · Oura Ring → Apple Health <span class="k">2 минуты</span></summary>
+    <div class="body">
+      <ol>
+        <li>В приложении <b>Oura</b> открой свой профиль.</li>
+        <li>Найди <b>Settings</b> → <b>Health Integration</b> (в некоторых версиях сразу «Apple Health»).</li>
+        <li>Включи <b>Apple Health</b> и разреши всё, что попросят.</li>
+      </ol>
+      <p><b>Что реально приедет в Здоровье:</b> сон и фазы сна, пульс покоя, HRV, частота дыхания, шаги, активные калории.</p>
+      <p style="margin-bottom:0"><b>Что останется только внутри Oura:</b> Readiness Score, Sleep Score, отклонение температуры тела. Это особенность Oura, обойти её нельзя — поэтому в воскресном разборе я опираюсь на часы сна и пульс покоя, а не на их фирменные баллы.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>4 · Apple Health напрямую в Claude <span class="k">2 минуты, пробуем первым</span></summary>
+    <div class="body">
+      <p>С января 2026 у приложения <b>Claude на айфоне</b> есть встроенное подключение к Apple Health — бета, США, планы Pro и Max. Если оно у тебя работает, половина возни ниже становится не нужна.</p>
+      <ol>
+        <li>Открой <b>Claude</b> на айфоне → настройки → <b>Connectors</b> (или сразу раздел <b>Health</b>).</li>
+        <li>Выбери <b>Apple Health</b> и разреши: вес, сон, шаги, активную энергию, пульс покоя, HRV.</li>
+        <li>Напиши мне сюда, что включил, — я проверю, вижу ли эти данные с компьютера.</li>
+      </ol>
+      <div class="note">Данные ты выбираешь сам и можешь отозвать в любой момент. Anthropic заявляет, что на них модели не обучаются. Но это бета, и работает она пока только внутри США.</div>
+      <p style="margin-bottom:0">Если выяснится, что данные видны только в мобильном приложении, а в нашей с тобой работе на компьютере их нет — тогда делаем пункт <b>5</b>, он решает ту же задачу обходным путём и работает наверняка.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>5 · Health Auto Export → папка в Google Drive <span class="k">10 минут, разовая покупка</span></summary>
+    <div class="body">
+      <p>Это тот самый мост, через который я вижу твои данные. Приложение называется <b>Health Auto Export — JSON/CSV</b>. Бесплатная версия только показывает графики; автоматические выгрузки — в платной, это разовые несколько долларов или подписка около 6 $ в год. Дешевле этого в системе нет ничего.</p>
+      <ol>
+        <li>Поставь приложение и дай ему доступ к Здоровью — <b>«Включить все категории»</b>.</li>
+        <li>Открой вкладку <b>Automations</b> → <b>New Automation</b>.</li>
+        <li>Выбери <b>Google</b> → <b>Connect Google</b> → войди в свой аккаунт и разреши доступ. Укажи папку <b>«Фитнес → Данные — сюда всё сыпется»</b>.</li>
+        <li>Отметь данные: <b>Body Mass, Body Fat Percentage, Sleep Analysis, Step Count, Active Energy, Resting Heart Rate, Heart Rate Variability</b>.</li>
+        <li>Формат — <b>CSV</b>, периодичность — <b>Daily</b>, агрегация — <b>по дням</b>.</li>
+        <li>Нажми <b>Update</b> и включи переключатель автоматизации.</li>
+      </ol>
+      <p style="margin-bottom:0">Всё. С этого момента каждый день в папке появляется файл, и в воскресенье мне есть что читать.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>6 · Четыре шортката <span class="k">15 минут</span></summary>
+    <div class="body">
+      <p>Открой приложение <b>Команды</b> (Shortcuts) → <b>+</b> → добавляй действия по списку. Имена важны — на них ссылаются кнопки на вкладке «Сегодня».</p>
+
+      <h4>«Вес» — записать вес голосом или в одно касание</h4>
+      <ol>
+        <li><b>Запросить ввод</b> (Ask for Input): текст запроса <code>Вес?</code>, тип — <b>Число</b>.</li>
+        <li><b>Записать образец данных Здоровья</b> (Log Health Sample): тип — <b>Масса тела</b>, значение — результат предыдущего действия, единицы — <b>кг</b>.</li>
+        <li><b>Показать уведомление</b>: <code>Записал</code>.</li>
+      </ol>
+
+      <h4>«Фитнес заметка» — дописать строку в недельную заметку</h4>
+      <ol>
+        <li><b>Запросить ввод</b>: <code>Что записать?</code>, тип — <b>Текст</b>.</li>
+        <li><b>Добавить в заметку</b> (Append to Note): выбери заметку «Фитнес — неделя N», текст — результат ввода.</li>
+      </ol>
+
+      <h4>«Пульт» — открыть этот сайт</h4>
+      <ol style="margin-bottom:1em"><li><b>Открыть URL</b> — адрес этого сайта. Одно действие, больше ничего.</li></ol>
+
+      <h4>«Записать» — отправить себе сообщение</h4>
+      <ol>
+        <li><b>Запросить ввод</b>: <code>Что записать?</code>, тип — <b>Текст</b>.</li>
+        <li><b>Отправить сообщение</b>: получатель — ты сам, текст — результат ввода.</li>
+      </ol>
+      <p style="margin-bottom:0"><small>Нужные действия ищутся через поиск по названию при нажатии «+». Если точное имя отличается в твоей версии iOS — набери первое слово, нужное найдётся.</small></p>
+    </div>
+  </details>
+
+  <details>
+    <summary>7 · Виджеты на экране <span class="k">5 минут</span></summary>
+    <div class="body">
+      <h4>На главный экран</h4>
+      <ol>
+        <li>Задержи палец на пустом месте экрана, пока иконки не задрожат.</li>
+        <li>Нажми <b>«Изменить»</b> → <b>«+»</b> вверху слева.</li>
+        <li>Найди <b>«Команды»</b>, выбери размер, нажми <b>«Добавить виджет»</b>.</li>
+        <li>Коснись виджета и выбери, какие шорткаты показывать.</li>
+      </ol>
+      <p>Размеры: маленький — 1 шорткат, средний — 4, большой — 8. <b>Бери средний с четырьмя:</b> «Вес», «Фитнес заметка», «Пульт», «Записать». Это ровно твой день в одном квадрате.</p>
+      <h4>На боковой экран (свайп вправо)</h4>
+      <ol>
+        <li>Свайпни вправо с главного экрана до конца.</li>
+        <li>Пролистай вниз, нажми <b>«Изменить»</b> → <b>«Добавить виджет»</b>.</li>
+        <li>Добавь «Команды» и «Здоровье» — второй покажет вес и сон графиком.</li>
+      </ol>
+      <h4>На экран блокировки</h4>
+      <ol style="margin-bottom:0">
+        <li>Задержи палец на экране блокировки → <b>«Настроить»</b>.</li>
+        <li>Нажми на область виджетов → <b>«Добавить виджеты»</b> → «Команды».</li>
+        <li>Поставь туда «Вес» — утром не придётся даже разблокировать телефон.</li>
+      </ol>
+    </div>
+  </details>
+
+  <details>
+    <summary>8 · Автоматизация: напоминания без твоего участия <span class="k">5 минут</span></summary>
+    <div class="body">
+      <ol>
+        <li>В приложении <b>Команды</b> открой вкладку <b>«Автоматизация»</b> → <b>«+»</b>.</li>
+        <li>Выбери <b>«Время дня»</b>, поставь время подъёма, периодичность — <b>«Ежедневно»</b>.</li>
+        <li>Действие — <b>«Открыть приложение» → Здоровье</b>, либо запуск шортката «Вес».</li>
+        <li>Выключи переключатель <b>«Спрашивать перед запуском»</b>, иначе будет требовать подтверждения.</li>
+      </ol>
+      <p style="margin-bottom:0">Сделай две такие: утром — взвешивание, вечером — напоминание про магний и галочки в заметке. При плавающем графике это важнее, чем кажется: именно смена ритма и сбивает.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>9 · Ввод через iMessage <span class="k">1 минута</span></summary>
+    <div class="body">
+      <p>Канал есть, и он лучше, чем я думал сначала: у меня подключены инструменты чтения и отправки iMessage прямо на этом компьютере. Упирается всё в одно системное разрешение.</p>
+      <ol>
+        <li>Системные настройки → <b>Конфиденциальность и безопасность</b> → <b>Полный доступ к диску</b>.</li>
+        <li>Найди в списке <b>Claude</b> и включи тумблер. Если его в списке нет — плюс внизу, добавь из папки «Программы».</li>
+        <li><b>Полностью закрой и снова открой Claude</b> — без перезапуска macOS новые права не отдаёт.</li>
+      </ol>
+      <div class="note">Галочку ставишь только ты. Системные настройки я не меняю принципиально — это не та вещь, которую стоит доверять ассистенту.</div>
+      <p>Как пользоваться после этого: пиши короткие строки — <code>вес 64,2</code>, <code>тренировка B сделал</code>, <code>пропустил ужин</code>, <code>закончился креатин</code>. Хоть себе, хоть в наш диалог. Разбирать их я буду сам в воскресном разборе, просить «забери из сообщений» не надо.</p>
+      <p style="margin-bottom:0">Заметка «Фитнес — неделя N» при этом никуда не девается. Два канала лучше одного: заметка — когда ты дома и спокойно, сообщение — когда ты на смене и на ходу.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>10 · Папка в Google Drive <span class="k">готово</span></summary>
+    <div class="body">
+      <p style="margin-bottom:0">Папка <b>«Фитнес» → «Данные — сюда всё сыпется»</b> уже создана. Туда складывается три вида файлов: выгрузки Health Auto Export (автоматом), скриншоты калорий и белка (раз в неделю, руками) и фото прогресса (раз в две недели). Больше туда ничего класть не надо, и порядок наводить тоже не надо — я разберусь, что из этого что.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>11 · База еды на 326 759 продуктов <span class="k">уже стоит, осталось включить</span></summary>
+    <div class="body">
+      <p>Ты просил поискать не только на гитхабе, а посмотреть, что люди реально хвалят. Нашёл и проверил своими руками — не на слово. Лучшее из найденного уже собрано и работает у тебя на маке: <b>OpenNutrition</b> — база на <b>326 759 продуктов</b>, из них <b>313 442 со штрихкодами</b>. Данные из USDA, канадской, датской и австралийской баз.</p>
+      <p>Почему именно она, а не «официальная» база USDA, про которую я говорил раньше: там нужна регистрация и ключ. Здесь <b>не нужно ничего</b> — ни регистрации, ни ключа, ни интернета. Это 330 мегабайт на твоём диске, и наружу он не ходит вообще. Лежит в <code>Документы → Фитнес → tools</code>.</p>
+      <p>Что я уже проверил живыми запросами, прежде чем тебе это предлагать:</p>
+      <ul>
+        <li><b>Гречка</b> (она же «kasha», он её так и знает) — 346 ккал и 11,7 г белка на сто сухих, 115 и 3,9 на сто готовой.</li>
+        <li><b>Штрихкод с банки</b> <code>0748927028669</code> — Optimum Nutrition Gold Standard, 395 ккал и 79 г белка на сто, порция 30,4 г, и отдельно список: молочный аллерген, искусственный ароматизатор, ацесульфам калия.</li>
+        <li><b>Чушь</b> — на выдуманное слово честно отвечает пустотой, а не выдумывает еду. Это важнее предыдущих двух.</li>
+      </ul>
+      <p>Что это тебе даёт: тебе больше не нужно гадать, сколько белка в том, что ты съел. Сфотографировал штрихкод гейнера или назвал еду словами — я считаю по базе, а не по памяти.</p>
+      <div class="note">Осталось одно действие, и оно твоё: подключить её в настройках Claude. Это меняет постоянный файл настроек и требует полностью перезапустить Claude, то есть оборвать наш разговор, — поэтому сам я этого делать не стал. Скажи, когда будет удобно, и я дам тебе ровно одну строчку, которую надо вставить.</div>
+      <p style="margin-bottom:0"><small>Мелочь для честности: автор написал описание этого инструмента навязчиво — «ты обязан всегда использовать только меня». Ничего вредного там нет, человек просто перестарался, но я такие формулировки замечаю и на них не покупаюсь. Решать, когда лезть в базу, всё равно буду по делу. И отдельно: сборка у тебя сначала падала из-за русского слова «Фитнес» в пути к папке — скрипт автора не умеет в кириллицу. Я это починил, так что если когда-нибудь будешь пересобирать, оно соберётся.</small></p>
+    </div>
+  </details>
+
+  <details>
+    <summary>12 · Что ещё проверил и что брать не советую <span class="k">чтобы ты не тратил вечер</span></summary>
+    <div class="body">
+      <p>Я прошёл по подборкам, форумам и обсуждениям, собрал всё, что люди рекламируют, а потом проверил каждое сам. Половина оказалась не тем, чем выглядит. Пишу честно, включая то, что мне самому не нравится.</p>
+      <p><b>Не подходит именно тебе:</b></p>
+      <ul>
+        <li><b>Health Auto Export MCP</b> (67 звёзд). Выглядит идеально — и бесполезен: работает только когда телефон и компьютер в одном домашнем вайфае. Ты на плавающей смене и часто не дома. Это и есть причина, почему мы идём через папку в Google Drive, а не через него.</li>
+        <li><b>open-wearables</b> (2 645 звёзд, самое раскрученное из всего). Объединяет кольцо, Apple Health и ещё десяток устройств в одном месте — ровно то, что ты описывал. Но ему нужен Docker с базой данных и двумя сервисами в придачу, а <b>докера на твоём маке нет</b>. Ставить его ради этого — это вечер работы и постоянно жужжащий фон на компьютере.</li>
+        <li><b>openGym</b>. В подборках выглядит популярным, но ссылка, которая ходит по интернету, ведёт на <b>копию с нулём звёзд</b>, а не на оригинал. Плюс опять докер и только веб-страница, без приложения.</li>
+        <li><b>nutrition-mcp</b>. Чужой сервер, обязательная регистрация, и вся твоя еда уезжает в базу незнакомого человека. При наличии локальной базы на 326 тысяч продуктов — незачем.</li>
+      </ul>
+      <p><b>Решать тебе, не мне:</b></p>
+      <ul>
+        <li><b>RENPHO MCP</b> (7 звёзд, январь 2026). Читал бы твои весы прямо из их облака: вес, процент жира, мышцы, вода, кость, висцеральный жир, метаболический возраст, тренды до года. Соблазнительно, ты же этими весами и пользуешься. Но: всего семь звёзд — это код, который никто толком не смотрел, и он <b>хранит твой пароль от RENPHO открытым текстом</b> в файле настроек. Пароль вводишь только ты, я его не касаюсь и просить не буду. Моё мнение: пока не стоит, весы и так отдают всё в Apple Health.</li>
+        <li><b>Oura MCP</b> (ноль звёзд, но это копия нормального). Единственный путь к тому, чего в Apple Health не бывает в принципе: <b>sleep score, readiness score и resilience</b>. Вход через нормальный OAuth, токен ложится в связку ключей мака, пароль никуда не пишется — это сильно лучше, чем у весов. Автор прямо пишет, что поддерживает Cowork. Минус один и честный: ноль звёзд значит, что кроме автора это не проверял никто.</li>
+        <li><b>apple-health-mcp</b> (573 звезды, работает локально, в сеть не ходит вообще). Держу в запасе: ему нужна выгрузка из ещё одного приложения, а родной файл выгрузки из Здоровья он не читает. Если путь через Google Drive начнёт подводить — вернёмся к нему.</li>
+      </ul>
+      <div class="note"><b>И честно про наш основной путь.</b> Health Auto Export — лучшее, что есть, но не идеальное: айфон не читает Здоровье, пока он заблокирован, точного интервала выгрузки никто не гарантирует, и всё это держится на разрешённом «Фоновом обновлении контента». Иногда файл за день может не появиться. Это не твоя вина и не повод что-то делать — я замечу пропуск в воскресном разборе и просто спрошу.</div>
+      <p style="margin-bottom:0">Главный вывод из всей этой разведки: <b>тебе ничего из этого не нужно ставить</b>, кроме одной базы еды, которая уже стоит. Остальное — либо требует докера, которого у тебя нет, либо требует отдать пароль, либо не работает вне дома. Я это проверил, чтобы ты не проверял.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>13 · Как обновлять этот сайт <span class="k">справка</span></summary>
+    <div class="body">
+      <p>Сайт — один файл <code>index.html</code> на GitHub Pages. Чтобы что-то поменять:</p>
+      <ol style="margin-bottom:0">
+        <li>Зайди в свой репозиторий на github.com.</li>
+        <li>Нажми на файл <code>index.html</code> → значок карандаша.</li>
+        <li>Поправь, внизу нажми <b>Commit changes</b>.</li>
+        <li>Через 1–3 минуты сайт обновится сам.</li>
+      </ol>
+      <p style="margin-bottom:0"><small>Но вообще-то проще сказать мне, что поправить, — я соберу новую версию.</small></p>
+    </div>
+  </details>
+
+  <div class="note" style="margin-bottom:0">
+    <b>Если делать не всё, то что?</b> По порядку важности: <b>1</b> (иконка на экране), <b>2</b> (весы), <b>6</b> и <b>7</b> (шорткат «Вес» и виджет). Этих четырёх хватает, чтобы система работала. Пункт <b>4</b> или <b>5</b> — тот, который снимает с тебя последние ручные действия; сделай его, когда будет свободных десять минут.
+  </div>
+</section>
+
+<div class="foot">Собрано для Павло · обновлено вручную · всё здесь можно и нужно менять</div>
+
+</main>
+
+<nav class="tabs"><div class="in" id="nav"></div></nav>
+
+<script>
+(function(){
+  var tabs=[
+    ["today","Сегодня","✓"],
+    ["food","Рецепты","🍲"],
+    ["pills","Таблетки","💊"],
+    ["gym","Зал","🏋️"],
+    ["shop","Покупки","🛒"],
+    ["prog","Прогресс","📈"],
+    ["setup","Настройка","⚙️"]
+  ];
+  var nav=document.getElementById('nav');
+  tabs.forEach(function(t){
+    var b=document.createElement('button');
+    b.innerHTML='<span class="ic">'+t[2]+'</span>'+t[1];
+    b.setAttribute('data-t',t[0]);
+    b.setAttribute('aria-selected', t[0]==='today'?'true':'false');
+    b.onclick=function(){go(t[0])};
+    nav.appendChild(b);
+  });
+  function go(id){
+    document.querySelectorAll('section.tab').forEach(function(s){
+      s.classList.toggle('on', s.id==='t-'+id);
+    });
+    nav.querySelectorAll('button').forEach(function(b){
+      b.setAttribute('aria-selected', b.getAttribute('data-t')===id?'true':'false');
+    });
+    window.scrollTo(0,0);
+    try{location.hash=id}catch(e){}
+  }
+  window.__go=go;
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('[data-go]');
+    if(a){e.preventDefault();go(a.getAttribute('data-go'))}
+  });
+  var h=(location.hash||'').replace('#','');
+  if(h && document.getElementById('t-'+h)) go(h);
+
+  // date
+  var d=new Date();
+  var dow=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'][d.getDay()];
+  var mo=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'][d.getMonth()];
+  document.getElementById('today').textContent=dow+', '+d.getDate()+' '+mo;
+
+  // checkboxes: persist per day, degrade gracefully
+  var mem={};
+  function key(){var d=new Date();return 'f'+d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
+  function load(){try{return JSON.parse(localStorage.getItem(key())||'{}')}catch(e){return mem}}
+  function save(o){mem=o;try{localStorage.setItem(key(),JSON.stringify(o))}catch(e){}}
+  var st=load();
+  document.querySelectorAll('.chk input[data-k]').forEach(function(i){
+    if(st[i.getAttribute('data-k')]) i.checked=true;
+    i.addEventListener('change',function(){
+      var s=load(); s[i.getAttribute('data-k')]=i.checked; save(s);
+    });
+  });
+})();
+</script>
+</body>
+</html>
